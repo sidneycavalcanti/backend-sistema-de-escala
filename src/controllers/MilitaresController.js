@@ -5,6 +5,8 @@ import { Op } from "sequelize";
 // import multer from "multer";
 
 import Militar from "../models/Militar";
+import Graduacao from "../models/Graduacao";
+import Funcao from "../models/Funcao";
 
 class MilitaresController {
     //listar
@@ -12,6 +14,7 @@ class MilitaresController {
       const {
         idt,
         grad,
+        situacao,
         name,
         num,
         dtultimosv,
@@ -43,6 +46,14 @@ class MilitaresController {
           ...where,
           grad: {
             [Op.like]: grad,
+          },
+        };
+      }
+      if (situacao) {
+        where = {
+          ...where,
+          situacao: {
+            [Op.like]: situacao,
           },
         };
       }
@@ -128,6 +139,10 @@ class MilitaresController {
   
       const data = await Militar.findAll({
         where,
+        include: [
+          { model: Graduacao, as: 'gradId',attributes: ['name'] },
+          { model: Funcao, as: 'funId',attributes: ['name'] },
+        ],
         order,
         limit,
         offset: limit * page - limit,
@@ -151,10 +166,11 @@ class MilitaresController {
        const schema = Yup.object().shape({
             idt: Yup.number().required(),
             grad: Yup.string().required(),
+            situacao: Yup.bool().required(),
             name: Yup.string().required(),
             num: Yup.number().required(),
             dtultimosv: Yup.date(),
-            ultfunc: Yup.string(),
+            ultfunc: Yup.number(),
             qtddiaf: Yup.number()
           });
 
@@ -181,10 +197,11 @@ class MilitaresController {
           const schema = Yup.object().shape({
             idt: Yup.number(),
             grad: Yup.string(),
+            situacao: Yup.bool(),
             name: Yup.string(),
             num: Yup.number(),
             dtultimosv: Yup.date(),
-            ultfunc: Yup.string(),
+            ultfunc: Yup.number(),
             qtddiaf: Yup.number()
           });
       

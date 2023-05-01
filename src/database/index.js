@@ -5,9 +5,11 @@ import config from "../config/database";
 import Servico from "../models/Servico";
 import Militar from "../models/Militar";
 import User from "../models/User";
+import Graduacao from "../models/Graduacao";
+import Funcao from "../models/Funcao";
 // import File from "../app/models/File";
 
-const models =  [ User, Servico, Militar ];
+const models =  [ User, Servico, Militar, Graduacao, Funcao ];
 
 class Database {
   constructor() {

@@ -4,6 +4,8 @@ import { Op } from "sequelize";
 
 import Servico from "../models/Servico";
 import Militar from "../models/Militar";
+import Graduacao from "../models/Graduacao";
+import Funcao from "../models/Funcao";
 // import Mail from "../../lib/Mail";
 // import Queue from "../../lib/Queue";
 // import Dummyjob from "../jobs/Dummyjob";
@@ -12,13 +14,19 @@ class ServicosController {
     //listar
     
     async index(req, res) {
+
         const {
           data,
           oficial_id ,
           sgtdia_id ,
           cbgd_id,
+          rancho_id,
           moto_id,
           parmcav_id,
+
+          auxrancho1_id,
+          auxrancho2_id,
+          auxrancho3_id,
 
           frente1_id,
           frente2_id,
@@ -36,6 +44,16 @@ class ServicosController {
           garagem2_id,
           garagem3_id,
 
+          pavsup1_id,
+          pavsup2_id,
+
+          armeiro_id,
+
+          patrulha,
+          instrucao,
+          geraladm,
+          jusdis,
+
           createdBefore,
           createdAfter,
           updatedBefore,
@@ -44,7 +62,7 @@ class ServicosController {
         } = req.query;
     
         const page = req.query.page || 1;
-        const limit = req.query.limit || 100;
+        const limit = req.query.limit || 5;
     
         let where = {};
         let order = [];
@@ -81,6 +99,14 @@ class ServicosController {
             },
           };
         }
+        if (rancho_id) {
+          where = {
+            ...where,
+            rancho_id: {
+              [Op.like]: rancho_id,
+            },
+          };
+        }
         if (moto_id) {
           where = {
             ...where,
@@ -94,6 +120,30 @@ class ServicosController {
             ...where,
             parmcav_id: {
               [Op.like]: parmcav_id,
+            },
+          };
+        }
+        if (auxrancho1_id) {
+          where = {
+            ...where,
+            auxrancho1_id: {
+              [Op.like]: auxrancho1_id,
+            },
+          };
+        }  
+        if (auxrancho2_id) {
+          where = {
+            ...where,
+            auxrancho2_id: {
+              [Op.like]: auxrancho2_id,
+            },
+          };
+        } 
+        if (auxrancho3_id) {
+          where = {
+            ...where,
+            auxrancho3_id: {
+              [Op.like]: auxrancho3_id,
             },
           };
         }
@@ -113,7 +163,7 @@ class ServicosController {
               },
             };
           }
-          if (frente3_id) {
+        if (frente3_id) {
             where = {
               ...where,
               frente3_id: {
@@ -121,7 +171,7 @@ class ServicosController {
               },
             };
           }
-          if (tras1_id) {
+        if (tras1_id) {
             where = {
               ...where,
               tras1_id: {
@@ -129,7 +179,7 @@ class ServicosController {
               },
             };
           }
-          if (tras2_id) {
+        if (tras2_id) {
             where = {
               ...where,
               tras2_id: {
@@ -137,7 +187,7 @@ class ServicosController {
               },
             };
           }
-          if (tras3_id) {
+        if (tras3_id) {
             where = {
               ...where,
               tras3_id: {
@@ -145,7 +195,7 @@ class ServicosController {
               },
             };
           }
-          if (aloj1_id) {
+        if (aloj1_id) {
             where = {
               ...where,
               aloj1_id: {
@@ -153,7 +203,7 @@ class ServicosController {
               },
             };
           }
-          if (aloj2_id) {
+        if (aloj2_id) {
             where = {
               ...where,
               aloj2_id: {
@@ -161,7 +211,7 @@ class ServicosController {
               },
             };
           }
-          if (aloj3_id) {
+        if (aloj3_id) {
             where = {
               ...where,
               aloj3_id: {
@@ -169,7 +219,7 @@ class ServicosController {
               },
             };
           }
-          if (garagem1_id) {
+        if (garagem1_id) {
             where = {
               ...where,
               garagem1_id: {
@@ -177,7 +227,7 @@ class ServicosController {
               },
             };
           }
-          if (garagem2_id) {
+        if (garagem2_id) {
             where = {
               ...where,
               garagem2_id: {
@@ -185,11 +235,67 @@ class ServicosController {
               },
             };
           }
-          if (garagem3_id) {
+        if (garagem3_id) {
             where = {
               ...where,
               garagem3_id: {
                 [Op.like]: garagem3_id,
+              },
+            };
+          }
+        if (pavsup1_id) {
+            where = {
+              ...where,
+              pavsup1_id: {
+                [Op.like]: pavsup1_id,
+              },
+            };
+          }
+        if (pavsup2_id) {
+            where = {
+              ...where,
+              pavsup2_id: {
+                [Op.like]: pavsup2_id,
+              },
+            };
+          }
+        if (armeiro_id) {
+            where = {
+              ...where,
+              armeiro_id: {
+                [Op.like]: armeiro_id,
+              },
+            };
+          }
+          if (patrulha) {
+            where = {
+              ...where,
+              patrulha: {
+                [Op.like]: patrulha,
+              },
+            };
+          }
+          if (instrucao) {
+            where = {
+              ...where,
+              instrucao: {
+                [Op.like]: instrucao,
+              },
+            };
+          }
+          if (geraladm) {
+            where = {
+              ...where,
+              geraladm: {
+                [Op.like]: geraladm,
+              },
+            };
+          }
+          if (jusdis) {
+            where = {
+              ...where,
+              jusdis: {
+                [Op.like]: jusdis,
               },
             };
           }
@@ -234,69 +340,287 @@ class ServicosController {
         }
     
         const dados = await Servico.findAll({
-          where,
+         
+          where: {},
           include: [
-            { model: Militar, as: 'oficialId',attributes: ['grad','name'] },
-            { model: Militar, as: 'sgtdiaId',attributes: ['grad','name'] },
-            { model: Militar, as: 'cbgdId',attributes: ['grad','name'] },
-            { model: Militar, as: 'motoId',attributes: ['grad','name'] },
-            { model: Militar, as: 'parmcavId',attributes: ['grad','name'] },
+            { model: Militar, as: 'oficialId',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'sgtdiaId',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'cbgdId',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'motoId',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'ranchoId',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'parmcavId',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
 
-            { model: Militar, as: 'frente1Id',attributes: ['grad','name'] },
-            { model: Militar, as: 'frente2Id',attributes: ['grad','name'] },
-            { model: Militar, as: 'frente3Id',attributes: ['grad','name'] },
+            { model: Militar, as: 'auxrancho1Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'auxrancho2Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'auxrancho3Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
 
-            { model: Militar, as: 'tras1Id',attributes: ['grad','name'] },
-            { model: Militar, as: 'tras2Id',attributes: ['grad','name'] },
-            { model: Militar, as: 'tras3Id',attributes: ['grad','name'] },
+            { model: Militar, as: 'frente1Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'frente2Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'frente3Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
 
-            { model: Militar, as: 'aloj1Id',attributes: ['grad','name'] },
-            { model: Militar, as: 'aloj2Id',attributes: ['grad','name'] },
-            { model: Militar, as: 'aloj3Id',attributes: ['grad','name'] },
+            { model: Militar, as: 'tras1Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'tras2Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'tras3Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
 
-            { model: Militar, as: 'garagem1Id',attributes: ['grad','name'] },
-            { model: Militar, as: 'garagem2Id',attributes: ['grad','name'] },
-            { model: Militar, as: 'garagem3Id',attributes: ['grad','name'] },
+            { model: Militar, as: 'aloj1Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'aloj2Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'aloj3Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+
+            { model: Militar, as: 'garagem1Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'garagem2Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'garagem3Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+
+            { model: Militar, as: 'pavsup1Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+            { model: Militar, as: 'pavsup1Id',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
+
+            { model: Militar, as: 'armeiroId',attributes: ['grad','name'],  include: {
+              model: Graduacao,
+              as: 'gradId',
+              attributes: ['name']
+            }  },
           ],
-          order,
+          order: [['id', 'DESC']],
           limit,
           offset: (limit * page) - limit,
         });
-    
+        if(!dados){
+          return res.status(404).json();
+        }
         return res.json(dados);
       }
 
       //listar por id
       //localhost:5000/militars/1/contacts
       async show(req, res){
-
         // findbypk 
           const servico = await Servico.findByPk(req.params.id, {
+           
             include: [
-              { model: Militar, as: 'oficialId',attributes: ['grad','name'] },
-              { model: Militar, as: 'sgtdiaId',attributes: ['grad','name'] },
-              { model: Militar, as: 'cbgdId',attributes: ['grad','name'] },
-              { model: Militar, as: 'motoId',attributes: ['grad','name'] },
-              { model: Militar, as: 'parmcavId',attributes: ['grad','name'] },
+              { model: Militar, as: 'oficialId',attributes: ['name'],  include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } }, 
+              { model: Militar, as: 'sgtdiaId',attributes: ['name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'cbgdId',attributes: ['name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'ranchoId',attributes: ['name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'motoId',attributes: ['name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'parmcavId',attributes: ['name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+
+              
+              { model: Militar, as: 'auxrancho1Id',attributes: ['name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'auxrancho2Id',attributes: ['name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'auxrancho3Id',attributes: ['name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
   
-              { model: Militar, as: 'frente1Id',attributes: ['grad','name'] },
-              { model: Militar, as: 'frente2Id',attributes: ['grad','name'] },
-              { model: Militar, as: 'frente3Id',attributes: ['grad','name'] },
+              { model: Militar, as: 'frente1Id',attributes: ['name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'frente2Id',attributes: ['name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'frente3Id',attributes: ['name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+
+              { model: Militar, as: 'tras1Id',attributes: ['grad','name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'tras2Id',attributes: ['grad','name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'tras3Id',attributes: ['grad','name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
   
-              { model: Militar, as: 'tras1Id',attributes: ['grad','name'] },
-              { model: Militar, as: 'tras2Id',attributes: ['grad','name'] },
-              { model: Militar, as: 'tras3Id',attributes: ['grad','name'] },
+              { model: Militar, as: 'aloj1Id',attributes: ['grad','name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'aloj2Id',attributes: ['grad','name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'aloj3Id',attributes: ['grad','name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
   
-              { model: Militar, as: 'aloj1Id',attributes: ['grad','name'] },
-              { model: Militar, as: 'aloj2Id',attributes: ['grad','name'] },
-              { model: Militar, as: 'aloj3Id',attributes: ['grad','name'] },
+              { model: Militar, as: 'garagem1Id',attributes: ['grad','name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'garagem2Id',attributes: ['grad','name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'garagem3Id',attributes: ['grad','name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+
+              { model: Militar, as: 'pavsup1Id',attributes: ['grad','name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
+              { model: Militar, as: 'pavsup1Id',attributes: ['grad','name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
   
-              { model: Militar, as: 'garagem1Id',attributes: ['grad','name'] },
-              { model: Militar, as: 'garagem2Id',attributes: ['grad','name'] },
-              { model: Militar, as: 'garagem3Id',attributes: ['grad','name'] },
+              { model: Militar, as: 'armeiroId',attributes: ['grad','name'], include: {
+                model: Graduacao,
+                as: 'gradId',
+                attributes: ['name']
+              } },
             ],
           })
-  
+          // const militar = await Militar.findByPk(id, {
+          //   include: [{model: Graduacao, as: 'gradId', attributes: ['name'] }]});
+
           if (!servico) {
           return res.status(404).json();
           }
@@ -306,13 +630,19 @@ class ServicosController {
       async show2(req, res){
 
         // findbypk 
-          const servico = await Servico.findByPk(req.params.id, {
+          const servico = await Servico.findByPk({}, {
             include: [
               { model: Militar, as: 'oficialId',attributes: ['grad','name'] },
               { model: Militar, as: 'sgtdiaId',attributes: ['grad','name'] },
               { model: Militar, as: 'cbgdId',attributes: ['grad','name'] },
+              { model: Militar, as: 'ranchoId',attributes: ['grad','name'] },
               { model: Militar, as: 'motoId',attributes: ['grad','name'] },
               { model: Militar, as: 'parmcavId',attributes: ['grad','name'] },
+
+              
+              { model: Militar, as: 'auxrancho1Id',attributes: ['grad','name'] },
+              { model: Militar, as: 'auxrancho2Id',attributes: ['grad','name'] },
+              { model: Militar, as: 'auxrancho3Id',attributes: ['grad','name'] },
   
               { model: Militar, as: 'frente1Id',attributes: ['grad','name'] },
               { model: Militar, as: 'frente2Id',attributes: ['grad','name'] },
@@ -329,6 +659,11 @@ class ServicosController {
               { model: Militar, as: 'garagem1Id',attributes: ['grad','name'] },
               { model: Militar, as: 'garagem2Id',attributes: ['grad','name'] },
               { model: Militar, as: 'garagem3Id',attributes: ['grad','name'] },
+
+              { model: Militar, as: 'pavsup1Id',attributes: ['grad','name'] },
+              { model: Militar, as: 'pavsup1Id',attributes: ['grad','name'] },
+  
+              { model: Militar, as: 'armeiroId',attributes: ['grad','name'] },
             ],
           })
   
@@ -337,9 +672,6 @@ class ServicosController {
           }
           return res.json(servico);
       }
-
-
-     
 
       //criar
       async create(req, res){
@@ -350,7 +682,12 @@ class ServicosController {
               sgtdia_id: Yup.number().required(),
               cbgd_id: Yup.number().required(),
               moto_id: Yup.number().required(),
+              rancho_id: Yup.number().required(),
               parmcav_id: Yup.number().required(),
+
+              auxrancho1_id: Yup.number().required(),
+              auxrancho2_id: Yup.number().required(),
+              auxrancho3_id: Yup.number().required(),
 
               frente1_id: Yup.number().required(),
               frente2_id: Yup.number().required(),
@@ -367,6 +704,16 @@ class ServicosController {
               garagem1_id: Yup.number().required(),
               garagem2_id: Yup.number().required(),
               garagem3_id: Yup.number().required(),
+
+              pavsup1_id: Yup.number().required(),
+              pavsup2_id: Yup.number().required(),
+
+              armeiro_id: Yup.number().required(),
+
+              patrulha: Yup.string().required(),
+              instrucao: Yup.string().required(),
+              geraladm: Yup.string().required(),
+              jusdis: Yup.string().required(),
 
             });
   
@@ -390,7 +737,12 @@ class ServicosController {
           sgtdia_id: Yup.number(),
           cbgd_id: Yup.number(),
           moto_id: Yup.number(),
+          rancho_id: Yup.number(),
           permcav_id: Yup.number(),
+
+          auxrancho1_id: Yup.number(),
+          auxrancho2_id: Yup.number(),
+          auxrancho3_id: Yup.number(),
 
           frente1_id: Yup.number(),
           frente2_id: Yup.number(),
@@ -407,6 +759,16 @@ class ServicosController {
           garagem1_id: Yup.number(),
           garagem2_id: Yup.number(),
           garagem3_id: Yup.number(),
+
+          pavsup1_id: Yup.number(),
+          pavsup2_id: Yup.number(),
+
+          armeiro_id: Yup.number(),
+
+          patrulha: Yup.string(),
+          instrucao: Yup.string(),
+          geraladm: Yup.string(),
+          jusdis: Yup.string(),
         });
       
         if (!(await schema.isValid(req.body))) {
@@ -449,6 +811,7 @@ class ServicosController {
       
         return res.status(201).json(updatedServico);
       }
+
       //excluir
       async destroy(req, res) {
   
