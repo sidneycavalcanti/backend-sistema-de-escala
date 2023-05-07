@@ -5,7 +5,6 @@ import { Op } from "sequelize";
 import Servico from "../models/Servico";
 import Militar from "../models/Militar";
 import Graduacao from "../models/Graduacao";
-import Funcao from "../models/Funcao";
 // import Mail from "../../lib/Mail";
 // import Queue from "../../lib/Queue";
 // import Dummyjob from "../jobs/Dummyjob";
@@ -16,6 +15,7 @@ class ServicosController {
     async index(req, res) {
 
         const {
+          id,
           data,
           oficial_id ,
           sgtdia_id ,
@@ -66,12 +66,21 @@ class ServicosController {
     
         let where = {};
         let order = [];
+
+        if (id) {
+          where = {
+            ...where,
+            id: {
+              [Op.like]: id,
+            },
+          };
+        }
     
         if (data) {
           where = {
             ...where,
             data: {
-              [Op.like]: data,
+              [Op.eq ]: moment(data).format('YYYY-MM-DD'),
             },
           };
         }
@@ -341,7 +350,7 @@ class ServicosController {
     
         const dados = await Servico.findAll({
          
-          where: {},
+          where,
           include: [
             { model: Militar, as: 'oficialId',attributes: ['grad','name'],  include: {
               model: Graduacao,
@@ -471,7 +480,7 @@ class ServicosController {
               attributes: ['name']
             }  },
           ],
-          order: [['id', 'DESC']],
+          order: [['data', 'DESC']],
           limit,
           offset: (limit * page) - limit,
         });

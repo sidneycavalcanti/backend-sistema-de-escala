@@ -6,7 +6,7 @@ import { Op } from "sequelize";
 
 import Militar from "../models/Militar";
 import Graduacao from "../models/Graduacao";
-import Funcao from "../models/Funcao";
+
 
 class MilitaresController {
     //listar
@@ -141,15 +141,16 @@ class MilitaresController {
         where,
         include: [
           { model: Graduacao, as: 'gradId',attributes: ['name'] },
-          { model: Funcao, as: 'funId',attributes: ['name'] },
         ],
-        order,
+        order: [['grad', 'ASC']],
         limit,
         offset: limit * page - limit,
       });
   
       return res.json(data);
     }
+
+   
   
     //listar por id
     async show(req, res){
@@ -165,8 +166,8 @@ class MilitaresController {
       console.log(req.body);
        const schema = Yup.object().shape({
             idt: Yup.number().required(),
-            grad: Yup.string().required(),
-            situacao: Yup.bool().required(),
+            grad: Yup.number().required(),
+            situacao: Yup.bool(),
             name: Yup.string().required(),
             num: Yup.number().required(),
             dtultimosv: Yup.date(),
@@ -196,7 +197,7 @@ class MilitaresController {
     async update(req, res){
           const schema = Yup.object().shape({
             idt: Yup.number(),
-            grad: Yup.string(),
+            grad: Yup.number(),
             situacao: Yup.bool(),
             name: Yup.string(),
             num: Yup.number(),
@@ -222,6 +223,30 @@ class MilitaresController {
       
           return res.status(201).json({  idt, grad, name, num, dtultimosv, ultfunc, qtddiaf});
     }
+    
+    //atualizar situacao ativo ou inativo
+    async update(req, res){
+      const schema = Yup.object().shape({
+        situacao: Yup.bool(),
+      });
+  
+      if (!(await schema.isValid(req.body))) {
+        return res.status(400).json({ error: "Error on validate schema." });
+      }
+  
+      const militar = await Militar.findByPk(req.params.id);
+  
+      if (!militar) {
+        return res.status(404).json();
+      }
+  
+     
+      const { idt, grad, name, num, dtultimosv, ultfunc, qtddiaf} = await militar.update(
+        req.body
+      );
+  
+      return res.status(201).json({  idt, grad, name, num, dtultimosv, ultfunc, qtddiaf});
+}
     //excluir
     async destroy(req, res) {
 
