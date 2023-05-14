@@ -5,7 +5,7 @@ class Servico extends Model {
     super.init(
       {
         data: Sequelize.DATE,
-
+    
         oficial_id: Sequelize.INTEGER,
         sgtdia_id: Sequelize.INTEGER,
         cbgd_id: Sequelize.INTEGER,

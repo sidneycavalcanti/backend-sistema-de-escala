@@ -32,6 +32,9 @@ routes.post("/militares", militares.create);
 routes.put("/militares/:id", militares.update);
 routes.delete("/militares/:id", militares.destroy);
 
+routes.get("/militarestotal", militares.index1);
+routes.get("/militarestotal/:id", militares.show);
+routes.put("/militarestotal/:id", militares.update);
 
 //servicos
 routes.get("/servicos", servicos.index);
