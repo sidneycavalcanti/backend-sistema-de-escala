@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import { Op } from "sequelize";
-// import { parseISO } from "date-fns";
+import { parseISO } from "date-fns";
 
 import Graduacao from "../models/Graduacao";
 

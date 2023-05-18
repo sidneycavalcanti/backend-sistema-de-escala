@@ -2,9 +2,9 @@ import { Router } from "express";
 // import multer from "multer";
 // import multerConfig from "./config/multer";
 
-// import auth from "./app/middlewares/auth";
+import auth from "./middlewares/auth";
 
-// import sessions from "./app/controllers/SessionsController";
+import sessions from "./controllers/SessionsController.js";
 import servicos from "./controllers/ServicosController";
 import militares from "./controllers/MilitaresController";
 import users from "./controllers/UsersController";
@@ -15,14 +15,14 @@ const routes = new Router();
 // const upload = multer (multerConfig);
 
 
-// sessions
+//sessions
 
-// routes.post("/sessions", sessions.create);
+routes.post("/sessions", sessions.create);
 
 
 //apartir dessa posição todas as rotas vão está protegida
 //controla o acesso.
-// routes.use(auth);
+routes.use(auth);
 
 
 //militars
