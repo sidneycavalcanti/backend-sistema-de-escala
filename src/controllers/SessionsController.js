@@ -3,8 +3,8 @@ import User from "../models/User";
 import authConfig from "../config/auth";
 
 class SessionsController {
-    async create(req,res){
-        const { name, password } = req.body;
+    async create(req,res){  
+        const { name, password} = req.body;
 
 
         //saber o usuario foi encontrado
@@ -20,19 +20,18 @@ class SessionsController {
             return res.status(401).json({ error: "Password not match."});
         }
 
-        const { id } = user;
+        const { id, cat } = user;
 
         return res.json({
             user: {
                 id,
                 name,
+                cat,
             },
             token: jwt.sign({ id }, authConfig.secret, {
-               expiresIn: authConfig.expiresIn,
+                expiresIn: authConfig.expiresIn,
             }),
-
         })
-
     }
 }
 
