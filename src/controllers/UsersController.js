@@ -94,7 +94,7 @@ class UsersController {
       offset: limit * page - limit,
     });
 
-    // User.findByPk(req.userId);
+    User.findByPk(req.userId);
 
     return res.json(data);
   }

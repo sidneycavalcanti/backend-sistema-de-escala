@@ -5,6 +5,7 @@ import { parseISO } from "date-fns";
 import Servico from "../models/Servico";
 import Militar from "../models/Militar";
 import Graduacao from "../models/Graduacao";
+import User from "../models/User";
 // import Mail from "../../lib/Mail";
 // import Queue from "../../lib/Queue";
 // import Dummyjob from "../jobs/Dummyjob";
@@ -346,8 +347,8 @@ class ServicosController {
     if (sort) {
       order = sort.split(",").map((item) => item.split(":"));
     }
-
-    const dados = await Servico.findAll({
+    try{
+      const data = await Servico.findAll({
       where,
       include: [
         {
@@ -602,10 +603,17 @@ class ServicosController {
       limit,
       offset: limit * page - limit,
     });
-    if (!dados) {
-      return res.status(404).json();
-    }
-    return res.json(dados);
+    const count = await Servico.count({ where });
+    const totalPages = Math.ceil(count / limit);
+    return res.status(201).json({ data, totalPages });
+   }
+   catch(error){
+ if (error.name === "SequelizeUniqueConstraintError") {
+        return res.status(400).json({ error: "Serviço already exists." });
+      }
+      console.error("Error on create:", error);
+      return res.status(500).json({ error: "Internal server error." });
+    } 
   }
 
   //listar por id

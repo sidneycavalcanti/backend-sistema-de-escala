@@ -16,12 +16,11 @@ const routes = new Router();
 
 
 //sessions
-
 routes.post("/sessions", sessions.create);
+routes.get("/verifyToken", sessions.verifyToken);
 
 
-//apartir dessa posição todas as rotas vão está protegida
-//controla o acesso.
+//apartir dessa posição todas as rotas vão está protegida, controla o acesso.
 routes.use(auth);
 
 

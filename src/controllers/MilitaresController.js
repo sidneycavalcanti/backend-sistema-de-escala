@@ -2,10 +2,12 @@ import * as Yup from "yup";
 import { Op } from "sequelize";
 import { parseISO } from "date-fns";
 
+
 // import multer from "multer";
 
 import Militar from "../models/Militar";
 import Graduacao from "../models/Graduacao";
+import User from "../models/User";
 
 class MilitaresController {
   //listar
@@ -367,48 +369,48 @@ class MilitaresController {
     return res.status(201).json(updatedMilitar);
   }
 
-  //atualizar situacao ativo ou inativo
-  async update(req, res) {
-    const schema = Yup.object().shape({
-      situacao: Yup.bool(),
-    });
+  // //atualizar situacao ativo ou inativo
+  // async update(req, res) {
+  //   const schema = Yup.object().shape({
+  //     situacao: Yup.bool(),
+  //   });
 
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: "Error on validate schema." });
-    }
+  //   if (!(await schema.isValid(req.body))) {
+  //     return res.status(400).json({ error: "Error on validate schema." });
+  //   }
 
-    const militar = await Militar.findByPk(req.params.id);
+  //   const militar = await Militar.findByPk(req.params.id);
 
-    if (!militar) {
-      return res.status(404).json();
-    }
+  //   if (!militar) {
+  //     return res.status(404).json();
+  //   }
 
-    const updatedMilitar = await militar.update(req.body);
+  //   const updatedMilitar = await militar.update(req.body);
 
-    return res.status(201).json(updatedMilitar);
-  }
+  //   return res.status(201).json(updatedMilitar);
+  // }
 
-  //atualizar dias de folga
-  async update(req, res) {
-    const schema = Yup.object().shape({
-      qtddiaf: Yup.number(),
-    });
+  // //atualizar dias de folga
+  // async update(req, res) {
+  //   const schema = Yup.object().shape({
+  //     qtddiaf: Yup.number(),
+  //   });
 
 
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: "Error on validate schema." });
-    }
+  //   if (!(await schema.isValid(req.body))) {
+  //     return res.status(400).json({ error: "Error on validate schema." });
+  //   }
 
-    const militar = await Militar.findByPk(req.params.id);
+  //   const militar = await Militar.findByPk(req.params.id);
 
-    if (!militar) {
-      return res.status(404).json();
-    }
+  //   if (!militar) {
+  //     return res.status(404).json();
+  //   }
 
-    const updatedMilitar = await militar.update(req.body);
+  //   const updatedMilitar = await militar.update(req.body);
 
-    return res.status(201).json(updatedMilitar);
-  }
+  //   return res.status(201).json(updatedMilitar);
+  // }
   //excluir
   async destroy(req, res) {
     const militar = await Militar.findByPk(req.params.id);

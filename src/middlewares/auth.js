@@ -1,26 +1,19 @@
 import jwt from "jsonwebtoken";
+import authConfig from "../config/auth";
 
+export default async (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-import authConfig from "../config/auth.js";
+  if (!authHeader) {
+    return res.status(401).json({ error: "Token not provided." });
+  }
 
-export default async (req, res, next) =>  {
-    const authHeader = req.headers.authorization;
+  const [, token] = authHeader.split(" ");
 
-        // if( authHeader === "secret" ){
-        //     return next();
-        // }
-        if(!authHeader){
-            return res.status(401).json({error: "token was not provided."});
-          
-        }
-        const [, token] = authHeader.split(" ");
-
-         try {
-           const decoded = await jwt.verify(token, authConfig.secret);
-           req.userId = decoded.id;
-           return next();
-        }catch(error){
-            return res.status(401).json({ error: "Token Invalid."});
-        }
-    //  return next();
-}
+  try {
+    jwt.verify(token, authConfig.secret);
+    return next();
+  } catch (error) {
+    return res.status(401).json({ error: "Invalid token." });
+  }
+};
