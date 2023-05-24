@@ -16,6 +16,8 @@ class ServicosController {
   async index(req, res) {
     const {
       id,
+      bi,
+      escala,
       data,
       oficial_id,
       sgtdia_id,
@@ -72,6 +74,24 @@ class ServicosController {
         ...where,
         id: {
           [Op.like]: id,
+        },
+      };
+    }
+
+    if (bi) {
+      where = {
+        ...where,
+        bi: {
+          [Op.like]: bi,
+        },
+      };
+    }
+
+    if (escala) {
+      where = {
+        ...where,
+        escala: {
+          [Op.like]: escala,
         },
       };
     }
@@ -932,6 +952,9 @@ class ServicosController {
     const schema = Yup.object().shape({
       data: Yup.date().required(),
 
+      bi: Yup.number().required(),
+      escala: Yup.boolean().required(),
+
       oficial_id: Yup.number().required(),
       sgtdia_id: Yup.number().required(),
       cbgd_id: Yup.number().required(),
@@ -995,6 +1018,9 @@ class ServicosController {
     console.log("chegou aqui 1");
     const schema = Yup.object().shape({
       data: Yup.date(),
+
+      bi: Yup.number(),
+      escala: Yup.number(),
 
       oficial_id: Yup.number(),
       sgtdia_id: Yup.number(),
