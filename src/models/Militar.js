@@ -5,12 +5,14 @@ class Militar extends Model {
     super.init(
       {
         idt: Sequelize.INTEGER,
-        grad: Sequelize.INTEGER,
         situacao: Sequelize.BOOLEAN,
+        grad: Sequelize.INTEGER,
         name: Sequelize.STRING,
         num: Sequelize.INTEGER,
-        dtultimosv: Sequelize.DATE,
+        dtultimosvpre: Sequelize.DATE,
+        dtultimosverm: Sequelize.DATE,
         qtddiaf: Sequelize.INTEGER,
+        qtddiafvermelha: Sequelize.INTEGER,
       },
       {
         sequelize,

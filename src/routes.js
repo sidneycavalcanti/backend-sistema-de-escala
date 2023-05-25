@@ -42,6 +42,10 @@ routes.post("/servicos", servicos.create);
 routes.put("/servicos/:id", servicos.update);
 routes.delete("/servicos/:id", servicos.destroy);
 
+routes.get("/servicostotal", servicos.index1);
+routes.get("/servicostotal/:id", servicos.show);
+routes.put("/servicostotal/:id", servicos.update);
+
 //users
 routes.get("/users", users.index);
 routes.get("/users/:id", users.show);

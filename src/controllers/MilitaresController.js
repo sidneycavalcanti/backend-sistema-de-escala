@@ -18,9 +18,10 @@ class MilitaresController {
       situacao,
       name,
       num,
-      dtultimosv,
-      ultfunc,
-      qtddiafm,
+      dtultimosvpre,
+      dtultimosverm,
+      qtddiaf,
+      qtddiafvermelha,
       createdBefore,
       createdAfter,
       updatedBefore,
@@ -74,27 +75,35 @@ class MilitaresController {
         },
       };
     }
-    if (dtultimosv) {
+    if (dtultimosvpre) {
       where = {
         ...where,
-        dtultimosv: {
-          [Op.like]: dtultimosv,
+        dtultimosvpre: {
+          [Op.like]: dtultimosvpre,
         },
       };
     }
-    if (ultfunc) {
+    if (dtultimosverm) {
       where = {
         ...where,
-        ultfunc: {
-          [Op.like]: ultfunc,
+        dtultimosverm: {
+          [Op.like]: dtultimosverm,
         },
       };
     }
-    if (qtddiafm) {
+    if (qtddiaf) {
       where = {
         ...where,
-        qtddiafm: {
-          [Op.like]: qtddiafm,
+        qtddiaf: {
+          [Op.like]: qtddiaf,
+        },
+      };
+    }
+    if (qtddiafvermelha) {
+      where = {
+        ...where,
+        qtddiafvermelha: {
+          [Op.like]: qtddiafvermelha,
         },
       };
     }
@@ -165,9 +174,10 @@ class MilitaresController {
       situacao,
       name,
       num,
-      dtultimosv,
-      ultfunc,
-      qtddiafm,
+      dtultimosvpre,
+      dtultimosverm,
+      qtddiaf,
+      qtddiafvermelha,
       createdBefore,
       createdAfter,
       updatedBefore,
@@ -176,7 +186,7 @@ class MilitaresController {
     } = req.query;
 
     const page = req.query.page || 1;
-    const limit = req.query.limit || 200;
+    const limit = req.query.limit || 10000000000000;
 
     let where = {};
     let order = [];
@@ -221,27 +231,35 @@ class MilitaresController {
         },
       };
     }
-    if (dtultimosv) {
+    if (dtultimosvpre) {
       where = {
         ...where,
-        dtultimosv: {
-          [Op.like]: dtultimosv,
+        dtultimosvpre: {
+          [Op.like]: dtultimosvpre,
         },
       };
     }
-    if (ultfunc) {
+    if (dtultimosverm) {
       where = {
         ...where,
-        ultfunc: {
-          [Op.like]: ultfunc,
+        dtultimosverm: {
+          [Op.like]: dtultimosverm,
         },
       };
     }
-    if (qtddiafm) {
+    if (qtddiaf) {
       where = {
         ...where,
-        qtddiafm: {
-          [Op.like]: qtddiafm,
+        qtddiaf: {
+          [Op.like]: qtddiaf,
+        },
+      };
+    }
+    if (qtddiafvermelha) {
+      where = {
+        ...where,
+        qtddiafvermelha: {
+          [Op.like]: qtddiafvermelha,
         },
       };
     }
@@ -304,7 +322,6 @@ class MilitaresController {
       return res.status(500).json({ error: "Internal server error." });
     }
   }
-
   //listar por id
   async show(req, res) {
     const militar = await Militar.findByPk(req.params.id);
@@ -319,13 +336,14 @@ class MilitaresController {
     console.log(req.body);
     const schema = Yup.object().shape({
       idt: Yup.number().required(),
+      situacao: Yup.boolean(),
       grad: Yup.number().required(),
-      situacao: Yup.bool(),
       name: Yup.string().required(),
       num: Yup.number().required(),
-      dtultimosv: Yup.date(),
-      ultfunc: Yup.number(),
+      dtultimosvpre: Yup.date().required(),
+      dtultimosverm: Yup.date().required(),
       qtddiaf: Yup.number(),
+      qtddiafvermelha: Yup.number(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -342,16 +360,18 @@ class MilitaresController {
       return res.status(500).json({ error: "Internal server error." });
     }
   }
-
   //atualizar
   async update(req, res) {
     const schema = Yup.object().shape({
       idt: Yup.number(),
+      situacao: Yup.boolean(),
       grad: Yup.number(),
       name: Yup.string(),
       num: Yup.number(),
-      dtultimosv: Yup.date(),
+      dtultimosvpre: Yup.date(),
+      dtultimosverm: Yup.date(),
       qtddiaf: Yup.number(),
+      qtddiafvermelha: Yup.number(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -368,49 +388,6 @@ class MilitaresController {
 
     return res.status(201).json(updatedMilitar);
   }
-
-  // //atualizar situacao ativo ou inativo
-  // async update(req, res) {
-  //   const schema = Yup.object().shape({
-  //     situacao: Yup.bool(),
-  //   });
-
-  //   if (!(await schema.isValid(req.body))) {
-  //     return res.status(400).json({ error: "Error on validate schema." });
-  //   }
-
-  //   const militar = await Militar.findByPk(req.params.id);
-
-  //   if (!militar) {
-  //     return res.status(404).json();
-  //   }
-
-  //   const updatedMilitar = await militar.update(req.body);
-
-  //   return res.status(201).json(updatedMilitar);
-  // }
-
-  // //atualizar dias de folga
-  // async update(req, res) {
-  //   const schema = Yup.object().shape({
-  //     qtddiaf: Yup.number(),
-  //   });
-
-
-  //   if (!(await schema.isValid(req.body))) {
-  //     return res.status(400).json({ error: "Error on validate schema." });
-  //   }
-
-  //   const militar = await Militar.findByPk(req.params.id);
-
-  //   if (!militar) {
-  //     return res.status(404).json();
-  //   }
-
-  //   const updatedMilitar = await militar.update(req.body);
-
-  //   return res.status(201).json(updatedMilitar);
-  // }
   //excluir
   async destroy(req, res) {
     const militar = await Militar.findByPk(req.params.id);
