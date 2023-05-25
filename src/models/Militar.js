@@ -6,6 +6,7 @@ class Militar extends Model {
       {
         idt: Sequelize.INTEGER,
         situacao: Sequelize.BOOLEAN,
+
         grad: Sequelize.INTEGER,
         name: Sequelize.STRING,
         num: Sequelize.INTEGER,
