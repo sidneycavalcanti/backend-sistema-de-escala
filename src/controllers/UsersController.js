@@ -22,7 +22,7 @@ class UsersController {
     } = req.query;
 
     const page = req.query.page || 1;
-    const limit = req.query.limit || 25;
+    const limit = req.query.limit || 8;
 
     let where = {};
     let order = [];
@@ -31,7 +31,7 @@ class UsersController {
       where = {
         ...where,
         name: {
-          [Op.like]: name,
+          [Op.like]:  `%${name}%`,
         },
       };
     }
@@ -86,17 +86,24 @@ class UsersController {
       order = sort.split(",").map(item => item.split(":"));
     }
 
-    const data = await User.findAll({
-      attributes: { exlude: ["password", "password_hash"] },
-      where,
-      order,
-      limit,
-      offset: limit * page - limit,
-    });
-
-    User.findByPk(req.userId);
-
-    return res.json(data);
+    try{
+      const data = await User.findAll({
+        attributes: { exlude: ["password", "password_hash"] },
+        where,
+        order,
+        limit,
+        offset: limit * page - limit,
+      });
+      const count = await User.count({ where });
+      const totalPages = Math.ceil(count / limit);
+      return res.status(201).json({ data, totalPages });
+    }catch (error) {
+      if (error.name === "SequelizeUniqueConstraintError") {
+        return res.status(400).json({ error: "Usuario already exists." });
+      }
+      console.error("Error on create:", error);
+      return res.status(500).json({ error: "Internal server error." });
+    } 
   }
 
   // Recuperar contato

@@ -63,7 +63,7 @@ class MilitaresController {
       where = {
         ...where,
         name: {
-          [Op.like]: name,
+          [Op.like]: `%${name}%`,
         },
       };
     }
