@@ -121,8 +121,9 @@ class UsersController {
   async create(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      cat: Yup.string().required(),
+      cat: Yup.boolean().required(),
       password: Yup.string().required().min(3),
+      //validando o password no passwordConfirmation
       passwordConfirmation: Yup.string().when("password", (password, field) =>
         password ? field.required().oneOf([Yup.ref("password")]) : field
       ),
@@ -132,9 +133,12 @@ class UsersController {
       return res.status(400).json({ error: "Error on validate schema." });
     }
     try{
-      const user =  await User.create(
+      const { id, name, cat, createdAt, updateAt } =  await User.create(
         req.body
       ); 
+
+      return res.status(201).json({  id, name, cat, createdAt, updateAt });
+
     } catch (error) {
       if (error.password === "SequelizeUniqueConstraintError") {
         return res.status(400).json({ error: "verificar limite de caracteres do password" });
@@ -153,7 +157,7 @@ class UsersController {
 
     // await Queue.add(Dummyjob.key, { message: "Hello Jobs"});
 
-    // return res.status(201).json({ name, cat, password, createAt, UpdatedAt });
+   
   }
 
   // Atualiza um Customer
@@ -161,12 +165,15 @@ class UsersController {
     const schema = Yup.object().shape({
       name: Yup.string(),
       cat: Yup.boolean(),
-      oldPassword: Yup.string().required().min(3),
-      password: Yup.string().required().
-        min(3)
+      oldPassword: Yup.string().min(3),
+      //função para verificar se o antigo password está correto permitindo a alteração
+      password: Yup.string()
+        .min(3)
         .when("oldPassword", (oldPassword, field) =>
           oldPassword ? field.required() : field
         ),
+
+        //função se existir o valor do password ele passa a ser requirido
       passwordConfirmation: Yup.string().when("password", (password, field) =>
         password ? field.required().oneOf([Yup.ref("password")]) : field
       ),
@@ -178,6 +185,7 @@ class UsersController {
 
     const user = await User.findByPk(req.params.id);
 
+    //se não existi um usuario 
     if (!user) {
       return res.status(404).json();
     }
@@ -188,11 +196,11 @@ class UsersController {
       return res.status(401).json({ error: "User password not match." });
     }
 
-    const { id, name, file_id, createdAt, updatedAt } = await user.update(
+    const { id, name, cat, createdAt, updatedAt } = await user.update(
       req.body
     );
 
-    return res.status(201).json({ id, name, file_id, createdAt, updatedAt });
+    return res.status(201).json({ id, name, cat, createdAt, updatedAt});
   }
 
   async destroy(req, res) {

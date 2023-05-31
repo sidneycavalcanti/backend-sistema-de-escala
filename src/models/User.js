@@ -18,10 +18,10 @@ class User extends Model {
         },
       }
     );
-    //aqui criptografa a senha
+    //aqui criptografa a senha / metodo da classe / hook siguinifica gancho
     this.addHook("beforeSave", async user => {
       if(user.password) {
-        user.password_hash = await bcrypt.hash(user.password, 8);
+        user.password_hash = await bcrypt.hash(user.password, 3);
       }
     });
   }

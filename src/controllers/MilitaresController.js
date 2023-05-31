@@ -353,11 +353,11 @@ class MilitaresController {
     }
     try {
 
-      const servicoExists = await Militar.findOne({
+      const militarExists = await Militar.findOne({
         where: { idt: req.body.idt },
       });
-      if (servicoExists) {
-        return res.status(400).json({ error: "Serviço already exists." });
+      if (militarExists) {
+        return res.status(400).json({ error: "Militar already exists." });
       }
 
       const militar = await Militar.create(req.body);
@@ -388,15 +388,22 @@ class MilitaresController {
       return res.status(400).json({ error: "Error on validate schema." });
     }
 
-    const militar = await Militar.findByPk(req.params.id);
+    try{
+      const militar = await Militar.findByPk(req.params.id);
 
-    if (!militar) {
-      return res.status(404).json();
+      if (!militar) {
+        return res.status(404).json();
+      }
+  
+      const updatedMilitar = await militar.update(req.body);
+  
+      return res.status(201).json(updatedMilitar);
+    }catch(error){
+      console.error("Error on create:", error);
+      return res.status(500).json({ error: "Internal server error." });
     }
 
-    const updatedMilitar = await militar.update(req.body);
-
-    return res.status(201).json(updatedMilitar);
+    
   }
   //excluir
   async destroy(req, res) {
