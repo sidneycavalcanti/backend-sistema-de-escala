@@ -333,15 +333,17 @@ class MilitaresController {
   }
   //criar
   async create(req, res) {
-    console.log(req.body);
     const schema = Yup.object().shape({
+      
       idt: Yup.number().required(),
-      situacao: Yup.boolean(),
+      // situacao: Yup.boolean(),
       grad: Yup.number().required(),
       name: Yup.string().required(),
       num: Yup.number().required(),
+
       dtultimosvpre: Yup.date().required(),
       dtultimosverm: Yup.date().required(),
+
       qtddiaf: Yup.number(),
       qtddiafvermelha: Yup.number(),
     });
@@ -350,6 +352,14 @@ class MilitaresController {
       return res.status(400).json({ error: "Error on validate schema." });
     }
     try {
+
+      const servicoExists = await Militar.findOne({
+        where: { idt: req.body.idt },
+      });
+      if (servicoExists) {
+        return res.status(400).json({ error: "Serviço already exists." });
+      }
+
       const militar = await Militar.create(req.body);
       return res.status(201).json(militar);
     } catch (error) {

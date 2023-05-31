@@ -119,25 +119,31 @@ class UsersController {
   }
 
   async create(req, res) {
-    console.log(req.body)
     const schema = Yup.object().shape({
-      //tipo    validação
       name: Yup.string().required(),
       cat: Yup.string().required(),
-      password: Yup.string().required().min(8),
+      password: Yup.string().required().min(3),
       passwordConfirmation: Yup.string().when("password", (password, field) =>
         password ? field.required().oneOf([Yup.ref("password")]) : field
       ),
     });
 
     if (!(await schema.isValid(req.body))) {
-      
       return res.status(400).json({ error: "Error on validate schema." });
     }
+    try{
+      const user =  await User.create(
+        req.body
+      ); 
+    } catch (error) {
+      if (error.password === "SequelizeUniqueConstraintError") {
+        return res.status(400).json({ error: "verificar limite de caracteres do password" });
+      }
+      console.error("Error on create:", error);
+      return res.status(500).json({ error: "Internal server error." })
+    }
 
-    const { name, cat, password, createAt, UpdatedAt } = await User.create(
-      req.body
-    );
+    // const { name, cat, password, createAt, UpdatedAt } =
 
     // Mail.send({
     //   to: email,
@@ -147,16 +153,17 @@ class UsersController {
 
     // await Queue.add(Dummyjob.key, { message: "Hello Jobs"});
 
-    return res.status(201).json({ name, cat, password, createAt, UpdatedAt });
+    // return res.status(201).json({ name, cat, password, createAt, UpdatedAt });
   }
 
   // Atualiza um Customer
   async update(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string(),
-      oldPassword: Yup.string().min(8),
-      password: Yup.string()
-        .min(8)
+      cat: Yup.boolean(),
+      oldPassword: Yup.string().required().min(3),
+      password: Yup.string().required().
+        min(3)
         .when("oldPassword", (oldPassword, field) =>
           oldPassword ? field.required() : field
         ),
