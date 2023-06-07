@@ -1,9 +1,9 @@
 const config = {
     dialect: "mysql",
-    host: "10.46.212.7",
-    port: 3307,
+    host: "localhost",
+    // port: 3307,
     username: "root",
-    password: "ti_cimnc44",
+    password: "",
     database: "escala",
     define: {
       timestamp: true, // cria duas colunas: createdAt e updatedAt
@@ -12,4 +12,4 @@ const config = {
     },
   };
 
-  export default config;
+  export default config;s
