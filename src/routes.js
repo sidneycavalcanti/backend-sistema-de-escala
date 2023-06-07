@@ -2,13 +2,13 @@ import { Router } from "express";
 // import multer from "multer";
 // import multerConfig from "./config/multer";
 
-import auth from "./middlewares/auth";
+import auth from "./middlewares/auth.js";
 
 import sessions from "./controllers/SessionsController.js";
-import servicos from "./controllers/ServicosController";
-import militares from "./controllers/MilitaresController";
-import users from "./controllers/UsersController";
-import grads from "./controllers/GradController";
+import servicos from "./controllers/ServicosController.js";
+import militares from "./controllers/MilitaresController.js";
+import users from "./controllers/UsersController.js";
+import grads from "./controllers/GradController.js";
 // import files from "./app/controllers/FilesController";
 
 const routes = new Router();

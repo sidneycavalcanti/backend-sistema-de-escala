@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import { Op } from "sequelize";
 import { parseISO } from "date-fns";
 
-import Graduacao from "../models/Graduacao";
+import Graduacao from "../models/Graduacao.js";
 
 
 class GradController {

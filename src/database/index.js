@@ -1,11 +1,11 @@
 import Sequelize from "sequelize";
 
-import config from "../config/database";
+import config from "../config/database.js";
 
-import Servico from "../models/Servico";
-import Militar from "../models/Militar";
-import User from "../models/User";
-import Graduacao from "../models/Graduacao";
+import Servico from "../models/Servico.js";
+import Militar from "../models/Militar.js";
+import User from "../models/User.js";
+import Graduacao from "../models/Graduacao.js";
 // import File from "../app/models/File";
 
 const models =  [ User, Servico, Militar, Graduacao ];

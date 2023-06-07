@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import { Op } from "sequelize";
 //import { parseISO } from "date-fns";
 
-import User from "../models/User";
+import User from "../models/User.js";
 // import Mail from "../../lib/Mail";
 // import Queue from "../../lib/Queue";
 // import Dummyjob from "../jobs/Dummyjob";

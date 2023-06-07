@@ -5,9 +5,9 @@ import { parseISO } from "date-fns";
 
 // import multer from "multer";
 
-import Militar from "../models/Militar";
-import Graduacao from "../models/Graduacao";
-import User from "../models/User";
+import Militar from "../models/Militar.js";
+import Graduacao from "../models/Graduacao.js";
+import User from "../models/User.js";
 
 class MilitaresController {
   //listar

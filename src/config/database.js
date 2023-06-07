@@ -1,8 +1,9 @@
-module.exports = {
+const config = {
     dialect: "mysql",
-    host: "localhost",
+    host: "10.46.212.7",
+    port: 3307,
     username: "root",
-    password: "",
+    password: "ti_cimnc44",
     database: "escala",
     define: {
       timestamp: true, // cria duas colunas: createdAt e updatedAt
@@ -11,4 +12,4 @@ module.exports = {
     },
   };
 
-  
+  export default config;

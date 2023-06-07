@@ -1,11 +1,14 @@
 {
   "name": "backservico",
   "version": "1",
+ 
   "description": "backend da aplicação de escala de serviço.",
   "main": "index.js",
   "author": "Sidney Cavalcanti",
   "license": "MIT",
+  
   "dependencies": {
+    "@thednp/dommatrix": "^2.0.4",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "date-fns": "^2.30.0",
@@ -23,7 +26,9 @@
   "devDependencies": {
     "sequelize-cli": "^6.6.0"
   },
+  "type": "module",
   "scripts": {
+    "start": "nodemon ./src/server.js",
     "dev": "nodemon ./src/server.js",
     "playground": "nodemon ./src/playground.js",
     "queue": "nodemon ./src/queue.js"

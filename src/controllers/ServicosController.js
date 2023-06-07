@@ -2,10 +2,10 @@ import * as Yup from "yup";
 import { Op } from "sequelize";
 import { parseISO } from "date-fns";
 
-import Servico from "../models/Servico";
-import Militar from "../models/Militar";
-import Graduacao from "../models/Graduacao";
-import User from "../models/User";
+import Servico from "../models/Servico.js";
+import Militar from "../models/Militar.js";
+import Graduacao from "../models/Graduacao.js";
+import User from "../models/User.js";
 // import Mail from "../../lib/Mail";
 // import Queue from "../../lib/Queue";
 // import Dummyjob from "../jobs/Dummyjob";
